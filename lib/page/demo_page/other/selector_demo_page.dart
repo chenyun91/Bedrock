@@ -1,6 +1,3 @@
-
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bedrock/base_framework/ui/widget/provider_widget.dart';
 import 'package:flutter_bedrock/base_framework/view_model/single_view_state_model.dart';
@@ -8,7 +5,6 @@ import 'package:flutter_bedrock/base_framework/widget_state/page_state.dart';
 import 'package:provider/provider.dart';
 
 class _DemoViewModel extends SingleViewStateModel {
-
   int selectorValue = 1;
 
   void updateSelectorValue() {
@@ -24,18 +20,13 @@ class _DemoViewModel extends SingleViewStateModel {
   }
 
   @override
-  Future? loadData() {
-
-  }
+  Future? loadData() {}
 
   @override
-  onCompleted(data) {
-
-  }
-
+  onCompleted(data) {}
 }
 
-class SelectorDemo extends PageState{
+class SelectorDemo extends PageState {
   late _DemoViewModel vm;
 
   @override
@@ -50,11 +41,11 @@ class SelectorDemo extends PageState{
   Widget build(BuildContext context) {
     return switchStatusBar2Dark(
         child: ProviderWidget<_DemoViewModel>(
-        builder: (ctx,model,child) {
-          debugPrint('build page');
-          return _buildPage();
-        },
-        model: vm));
+            builder: (ctx, model, child) {
+              debugPrint('build page');
+              return _buildPage();
+            },
+            model: vm));
   }
 
   Widget _buildPage() {
@@ -63,46 +54,36 @@ class SelectorDemo extends PageState{
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text('${vm.pageValue}',),
+          Text(
+            '${vm.pageValue}',
+          ),
           getSizeBox(height: 40),
-          RaisedButton(onPressed: () {
-            vm.updatePageValue();
-          },child: Text('refresh page'),),
-
-          Selector<_DemoViewModel,int>(
-            selector: (ctx,model) {
+          ElevatedButton(
+            onPressed: () {
+              vm.updatePageValue();
+            },
+            child: Text('refresh page'),
+          ),
+          Selector<_DemoViewModel, int>(
+            selector: (ctx, model) {
               return model.selectorValue;
             },
-            builder: (ctxx,value,child) {
+            builder: (ctxx, value, child) {
               debugPrint('build selector');
-              return Text('$value',);
+              return Text(
+                '$value',
+              );
             },
           ),
           getSizeBox(height: 40),
-          RaisedButton(onPressed: () {
-            vm.updateSelectorValue();
-          },child: Text('refresh selector'),),
+          ElevatedButton(
+            onPressed: () {
+              vm.updateSelectorValue();
+            },
+            child: Text('refresh selector'),
+          ),
         ],
       ),
     );
   }
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

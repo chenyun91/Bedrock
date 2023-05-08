@@ -1,40 +1,35 @@
-
-
-
 import 'dart:io';
-
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flustars/flustars.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bedrock/base_framework/config/frame_constant.dart';
 
-
-class DeviceModel extends ChangeNotifier{
-
-  DeviceModel({this.isAndroid,this.isIOS,this.androidDeviceInfo,this
-      .iosDeviceInfo}){
+class DeviceModel extends ChangeNotifier {
+  DeviceModel(
+      {this.isAndroid,
+      this.isIOS,
+      this.androidDeviceInfo,
+      this.iosDeviceInfo}) {
     assembleDeviceInfo();
   }
-  assembleDeviceInfo()async{
+  assembleDeviceInfo() async {
     DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
-    if(Platform.isAndroid){
+    if (Platform.isAndroid) {
       //load android device info
-      await deviceInfoPlugin.androidInfo.then((deviceInfo){
+      await deviceInfoPlugin.androidInfo.then((deviceInfo) {
         isAndroid = true;
         androidDeviceInfo = deviceInfo;
-        SpUtil.putString(BaseFrameConstant.DEVICE_UUID, deviceInfo.androidId ?? '');
+        SpUtil.putString(BaseFrameConstant.DEVICE_UUID, deviceInfo.id);
       });
-
-    }else{
+    } else {
       //load ios device info
-      await deviceInfoPlugin.iosInfo.then((deviceInfo){
+      await deviceInfoPlugin.iosInfo.then((deviceInfo) {
         isIOS = true;
         iosDeviceInfo = deviceInfo;
-        SpUtil.putString(BaseFrameConstant.DEVICE_UUID, deviceInfo.identifierForVendor ?? '');
-
+        SpUtil.putString(BaseFrameConstant.DEVICE_UUID,
+            deviceInfo.identifierForVendor ?? '');
       });
-
     }
   }
 
@@ -43,6 +38,4 @@ class DeviceModel extends ChangeNotifier{
 
   AndroidDeviceInfo? androidDeviceInfo;
   IosDeviceInfo? iosDeviceInfo;
-
-
 }

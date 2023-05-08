@@ -50,6 +50,50 @@ void main() async {
       SystemUiOverlayStyle(statusBarColor: Colors.transparent));
 }
 
+class MyFrameApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyFrameApp> with WidgetsBindingObserver {
+  int _fps = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+        // _fps = WidgetsBinding.instance.window.performance.framesPerSecond.round();
+        print("_fps=$_fps");
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeMetrics() {}
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        body: Center(
+          child: Text(
+            'FPS: $_fps',
+            style: TextStyle(fontSize: 24.0),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
@@ -62,29 +106,31 @@ class MyApp extends StatelessWidget {
         child: Consumer<LocaleModel>(builder: (ctx, localModel, child) {
           return RefreshConfiguration(
             hideFooterWhenNotFull: true, //列表数据不满一页,不触发加载更多
-            child: MaterialApp(
-              navigatorKey: navigatorKey,
+            child: Stack(children: [
+              MaterialApp(
+                // showPerformanceOverlay: true,
+                navigatorKey: navigatorKey,
 //                theme: ThemeData(
 //                  //项目配置字体，其他主题颜色配置的可以百度
 ////                  fontFamily: Theme.of(context).platform == TargetPlatform.android? (localModel.localeIndex == 1 ?  "HanSans":"DIN") : "IOSGILROY",
 //                ),
-              debugShowCheckedModeBanner: false,
-              locale: localModel.locale,
-              //国际化工厂代理
-              localizationsDelegates: [
-                // Intl 插件（需要安装）
-                S.delegate,
-                //RefreshLocalizations.delegate, //下拉刷新
-                //系统控件 国际化
-                GlobalCupertinoLocalizations.delegate,
-                GlobalMaterialLocalizations.delegate,
-                GlobalWidgetsLocalizations.delegate //文本方向等
-              ],
-              supportedLocales: S.delegate.supportedLocales,
-              navigatorObservers: [routeObserver],
-              home: DemoPageState().transformToPageWidget(),
+                debugShowCheckedModeBanner: false,
+                locale: localModel.locale,
+                //国际化工厂代理
+                localizationsDelegates: [
+                  // Intl 插件（需要安装）
+                  S.delegate,
+                  //RefreshLocalizations.delegate, //下拉刷新
+                  //系统控件 国际化
+                  GlobalCupertinoLocalizations.delegate,
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate //文本方向等
+                ],
+                supportedLocales: S.delegate.supportedLocales,
+                navigatorObservers: [routeObserver],
+                home: DemoPageState().transformToPageWidget(),
 
-              ///改版啦，这里用不到，你可以删除
+                ///改版啦，这里用不到，你可以删除
 //                onGenerateRoute: Router.generateRoute,
 //                onUnknownRoute: (settings){
 //                  return PageRouteBuilder(pageBuilder: (ctx,_,__){
@@ -92,7 +138,13 @@ class MyApp extends StatelessWidget {
 //                  });
 //                },
 //                initialRoute: RouteName.demo_page,
-            ),
+              ),
+              // Container(
+              //   width: 150,
+              //   height: 40,
+              //   child: MyFrameApp(),
+              // )
+            ]),
           );
         }),
       ),
